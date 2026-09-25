@@ -41,6 +41,10 @@ spec:
 
 Pin by digest in anything you operate; tags are for humans.
 
+Every green merge to main is a release: CI computes the next semantic version
+from conventional commits, publishes the multi-arch image and package to ghcr
+under that tag, and cuts the matching GitHub Release. Nothing is tagged by hand.
+
 ## Authenticate
 
 One bearer token. The credentials Secret holds a JSON document:
