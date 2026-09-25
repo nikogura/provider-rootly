@@ -1,0 +1,11 @@
+provider-rootly
+Copyright 2026 Nik Ogura
+
+This project is licensed under the Apache License 2.0.
+
+It is generated with Upjet (Apache-2.0) from the schema of, and at runtime
+executes, the Rootly Terraform provider
+(https://github.com/rootlyhq/terraform-provider-rootly), which is licensed
+under the Mozilla Public License 2.0. The Terraform provider binary is
+included in the container image unmodified; its source is available at the
+repository above.

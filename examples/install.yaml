@@ -1,0 +1,6 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-rootly
+spec:
+  package: xpkg.crossplane.io/nikogura/provider-rootly:v0.1.0

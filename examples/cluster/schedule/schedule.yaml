@@ -1,0 +1,9 @@
+apiVersion: schedule.rootly.crossplane.io/v1alpha1
+kind: Schedule
+metadata:
+  name: platform-oncall
+spec:
+  forProvider:
+    name: Platform on-call
+  providerConfigRef:
+    name: default

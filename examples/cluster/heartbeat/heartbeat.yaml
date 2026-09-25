@@ -1,0 +1,14 @@
+apiVersion: heartbeat.rootly.crossplane.io/v1alpha1
+kind: Heartbeat
+metadata:
+  name: nightly-backup
+spec:
+  forProvider:
+    name: nightly-backup
+    alertSummary: "Nightly backup heartbeat missed"
+    interval: 25
+    intervalUnit: hours
+    notificationTargetId: "00000000-0000-0000-0000-000000000000"
+    notificationTargetType: EscalationPolicy
+  providerConfigRef:
+    name: default

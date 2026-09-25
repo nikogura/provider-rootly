@@ -1,0 +1,9 @@
+apiVersion: alerts.rootly.crossplane.io/v1alpha1
+kind: AlertsSource
+metadata:
+  name: prometheus
+spec:
+  forProvider:
+    name: Prometheus
+  providerConfigRef:
+    name: default

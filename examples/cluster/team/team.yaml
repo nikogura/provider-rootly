@@ -1,0 +1,9 @@
+apiVersion: team.rootly.crossplane.io/v1alpha1
+kind: Team
+metadata:
+  name: platform
+spec:
+  forProvider:
+    name: Platform
+  providerConfigRef:
+    name: default

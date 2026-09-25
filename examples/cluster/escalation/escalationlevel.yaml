@@ -1,0 +1,13 @@
+apiVersion: escalation.rootly.crossplane.io/v1alpha1
+kind: EscalationLevel
+metadata:
+  name: platform-default-l1
+spec:
+  forProvider:
+    # The policy is referenced by name, not by pasting its Rootly UUID; the
+    # provider resolves the id once the policy exists.
+    escalationPolicyIdRef:
+      name: platform-default
+    position: 1
+  providerConfigRef:
+    name: default

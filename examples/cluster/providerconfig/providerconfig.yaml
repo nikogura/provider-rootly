@@ -1,0 +1,17 @@
+# The credentials Secret holds a JSON document; api_token is the only required
+# key. api_host is optional and only for self-hosted or EU endpoints:
+#
+#   kubectl create secret generic rootly-creds -n crossplane-system \
+#     --from-literal=credentials='{"api_token":"<ROOTLY_API_TOKEN>"}'
+#
+apiVersion: rootly.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      name: rootly-creds
+      namespace: crossplane-system
+      key: credentials

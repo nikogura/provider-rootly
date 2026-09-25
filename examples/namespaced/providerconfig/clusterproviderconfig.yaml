@@ -1,0 +1,13 @@
+# The credentials Secret holds a JSON document; api_token is the only required
+# key. api_host is optional and only for self-hosted or EU endpoints.
+apiVersion: rootly.m.crossplane.io/v1beta1
+kind: ClusterProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      name: example-creds
+      namespace: crossplane-system
+      key: credentials

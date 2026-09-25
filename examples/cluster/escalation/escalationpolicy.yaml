@@ -1,0 +1,9 @@
+apiVersion: escalation.rootly.crossplane.io/v1alpha1
+kind: EscalationPolicy
+metadata:
+  name: platform-default
+spec:
+  forProvider:
+    name: Platform default
+  providerConfigRef:
+    name: default
