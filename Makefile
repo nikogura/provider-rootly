@@ -65,7 +65,7 @@ CROSSPLANE_VERSION = 2.2.1
 # ====================================================================================
 # Setup Images
 
-REGISTRY_ORGS ?= ghcr.io/crossplane-contrib
+REGISTRY_ORGS ?= ghcr.io/nikogura
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
 
