@@ -10,7 +10,7 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 )
 
-// Both providers must expose exactly the six kinds this provider exists for,
+// Both providers must expose exactly the kinds this provider exists for,
 // under the names the custom configurators assign. This exercises the full
 // pipeline: schema parse, include list, external-name defaults and the
 // per-resource configurators.
@@ -21,12 +21,14 @@ func TestGetProvider(t *testing.T) {
 		shortGroup string
 		kind       string
 	}{
-		"rootly_team":              {shortGroup: "team", kind: "Team"},
-		"rootly_escalation_policy": {shortGroup: "escalation", kind: "EscalationPolicy"},
-		"rootly_escalation_level":  {shortGroup: "escalation", kind: "EscalationLevel"},
-		"rootly_schedule":          {shortGroup: "schedule", kind: "Schedule"},
-		"rootly_heartbeat":         {shortGroup: "heartbeat", kind: "Heartbeat"},
-		"rootly_alerts_source":     {shortGroup: "alerts", kind: "AlertsSource"},
+		"rootly_team":                   {shortGroup: "team", kind: "Team"},
+		"rootly_escalation_policy":      {shortGroup: "escalation", kind: "EscalationPolicy"},
+		"rootly_escalation_level":       {shortGroup: "escalation", kind: "EscalationLevel"},
+		"rootly_schedule":               {shortGroup: "schedule", kind: "Schedule"},
+		"rootly_schedule_rotation":      {shortGroup: "schedule", kind: "ScheduleRotation"},
+		"rootly_schedule_rotation_user": {shortGroup: "schedule", kind: "ScheduleRotationUser"},
+		"rootly_heartbeat":              {shortGroup: "heartbeat", kind: "Heartbeat"},
+		"rootly_alerts_source":          {shortGroup: "alerts", kind: "AlertsSource"},
 	}
 
 	tests := []struct {
@@ -79,16 +81,30 @@ func TestGetProvider(t *testing.T) {
 				}
 			}
 
-			level, ok := p.Resources["rootly_escalation_level"]
-			if !ok {
-				t.Fatal("rootly_escalation_level not generated")
+			// A child is referenced to its parent by name, never by a pasted
+			// Rootly UUID.
+			wantReferences := []struct {
+				resource string
+				field    string
+				target   string
+			}{
+				{resource: "rootly_escalation_level", field: "escalation_policy_id", target: "rootly_escalation_policy"},
+				{resource: "rootly_schedule_rotation", field: "schedule_id", target: "rootly_schedule"},
+				{resource: "rootly_schedule_rotation_user", field: "schedule_rotation_id", target: "rootly_schedule_rotation"},
 			}
-			ref, ok := level.References["escalation_policy_id"]
-			if !ok {
-				t.Fatal("escalation_policy_id has no cross-resource reference")
-			}
-			if ref.TerraformName != "rootly_escalation_policy" {
-				t.Errorf("escalation_policy_id references %q, want rootly_escalation_policy", ref.TerraformName)
+
+			for _, want := range wantReferences {
+				child, ok := p.Resources[want.resource]
+				if !ok {
+					t.Fatalf("%s not generated", want.resource)
+				}
+				ref, ok := child.References[want.field]
+				if !ok {
+					t.Fatalf("%s.%s has no cross-resource reference", want.resource, want.field)
+				}
+				if ref.TerraformName != want.target {
+					t.Errorf("%s.%s references %q, want %s", want.resource, want.field, ref.TerraformName, want.target)
+				}
 			}
 		})
 	}

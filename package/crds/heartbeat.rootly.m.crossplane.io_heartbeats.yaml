@@ -34,7 +34,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Heartbeat is the Schema for the Heartbeats API. <no value>
+        description: 'Heartbeat is the Schema for the Heartbeats API. A heartbeat:
+          Rootly raises an alert when an expected ping does not arrive within the
+          interval.'
         properties:
           apiVersion:
             description: |-

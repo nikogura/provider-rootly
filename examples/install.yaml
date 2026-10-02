@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-rootly
 spec:
-  package: xpkg.crossplane.io/nikogura/provider-rootly:v0.1.0
+  package: ghcr.io/nikogura/provider-rootly:v0.1.0

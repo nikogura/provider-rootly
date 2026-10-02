@@ -34,8 +34,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: EscalationLevel is the Schema for the EscalationLevels API. <no
-          value>
+        description: 'EscalationLevel is the Schema for the EscalationLevels API.
+          One level of an escalation policy: who is notified at that step, and the
+          delay before the next.'
         properties:
           apiVersion:
             description: |-

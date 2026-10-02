@@ -34,8 +34,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: EscalationPolicy is the Schema for the EscalationPolicys API.
-          <no value>
+        description: 'EscalationPolicy is the Schema for the EscalationPolicys API.
+          An escalation policy: who is paged for an alert, in what order, and how
+          many times.'
         properties:
           apiVersion:
             description: |-

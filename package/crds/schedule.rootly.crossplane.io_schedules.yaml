@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Schedule is the Schema for the Schedules API. <no value>
+        description: Schedule is the Schema for the Schedules API. An on-call schedule.
+          Who is on call, and when, is set by the rotations that belong to it.
         properties:
           apiVersion:
             description: |-

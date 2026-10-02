@@ -30,7 +30,8 @@ func TestConfigure(t *testing.T) {
 		ujconfig.WithRootGroup("rootly.crossplane.io"),
 		ujconfig.WithIncludeList([]string{
 			"rootly_team$", "rootly_escalation_policy$", "rootly_escalation_level$",
-			"rootly_schedule$", "rootly_heartbeat$", "rootly_alerts_source$",
+			"rootly_schedule$", "rootly_schedule_rotation$", "rootly_schedule_rotation_user$",
+			"rootly_heartbeat$", "rootly_alerts_source$",
 		}))
 
 	Configure(p)
@@ -46,6 +47,8 @@ func TestConfigure(t *testing.T) {
 		{name: "EscalationPolicy", resource: "rootly_escalation_policy", shortGroup: "escalation", kind: "EscalationPolicy"},
 		{name: "EscalationLevel", resource: "rootly_escalation_level", shortGroup: "escalation", kind: "EscalationLevel"},
 		{name: "Schedule", resource: "rootly_schedule", shortGroup: "schedule", kind: "Schedule"},
+		{name: "ScheduleRotation", resource: "rootly_schedule_rotation", shortGroup: "schedule", kind: "ScheduleRotation"},
+		{name: "ScheduleRotationUser", resource: "rootly_schedule_rotation_user", shortGroup: "schedule", kind: "ScheduleRotationUser"},
 		{name: "Heartbeat", resource: "rootly_heartbeat", shortGroup: "heartbeat", kind: "Heartbeat"},
 		{name: "AlertsSource", resource: "rootly_alerts_source", shortGroup: "alerts", kind: "AlertsSource"},
 	}
@@ -67,11 +70,23 @@ func TestConfigure(t *testing.T) {
 		})
 	}
 
-	ref, ok := p.Resources["rootly_escalation_level"].References["escalation_policy_id"]
-	if !ok {
-		t.Fatal("escalation_policy_id has no cross-resource reference")
+	references := []struct {
+		resource string
+		field    string
+		target   string
+	}{
+		{resource: "rootly_escalation_level", field: "escalation_policy_id", target: "rootly_escalation_policy"},
+		{resource: "rootly_schedule_rotation", field: "schedule_id", target: "rootly_schedule"},
+		{resource: "rootly_schedule_rotation_user", field: "schedule_rotation_id", target: "rootly_schedule_rotation"},
 	}
-	if ref.TerraformName != "rootly_escalation_policy" {
-		t.Errorf("escalation_policy_id references %q, want rootly_escalation_policy", ref.TerraformName)
+
+	for _, want := range references {
+		ref, ok := p.Resources[want.resource].References[want.field]
+		if !ok {
+			t.Fatalf("%s.%s has no cross-resource reference", want.resource, want.field)
+		}
+		if ref.TerraformName != want.target {
+			t.Errorf("%s.%s references %q, want %s", want.resource, want.field, ref.TerraformName, want.target)
+		}
 	}
 }

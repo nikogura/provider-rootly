@@ -8,3 +8,9 @@ package v1alpha1
 
 // Hub marks this type as a conversion hub.
 func (tr *Schedule) Hub() {}
+
+// Hub marks this type as a conversion hub.
+func (tr *ScheduleRotation) Hub() {}
+
+// Hub marks this type as a conversion hub.
+func (tr *ScheduleRotationUser) Hub() {}

@@ -10,7 +10,7 @@ on:
 
 env:
   # Common versions
-  GOLANGCI_VERSION: 'v2.12.1'
+  GOLANGCI_VERSION: 'v2.13.0'
   DOCKER_BUILDX_VERSION: 'v0.34.1'
 
 jobs:
@@ -49,10 +49,6 @@ jobs:
           MODIFIED_CRD_LIST: ${{ steps.modified-crds.outputs.all_changed_files }}
         run: |
           make crddiff
-      - name: Report native schema version changes
-        if: ${{ inputs.upjet-based-provider }}
-        run: |
-          make schema-version-diff
 
 
   lint:

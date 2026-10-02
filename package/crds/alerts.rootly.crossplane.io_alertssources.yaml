@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: AlertsSource is the Schema for the AlertsSources API. <no value>
+        description: 'AlertsSource is the Schema for the AlertsSources API. An alert
+          source: an integration that sends alerts into Rootly, by webhook or by email.'
         properties:
           apiVersion:
             description: |-

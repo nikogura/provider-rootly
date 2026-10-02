@@ -15,6 +15,8 @@ import (
 	heartbeat "github.com/nikogura/provider-rootly/internal/controller/cluster/heartbeat/heartbeat"
 	providerconfig "github.com/nikogura/provider-rootly/internal/controller/cluster/providerconfig"
 	schedule "github.com/nikogura/provider-rootly/internal/controller/cluster/schedule/schedule"
+	schedulerotation "github.com/nikogura/provider-rootly/internal/controller/cluster/schedule/schedulerotation"
+	schedulerotationuser "github.com/nikogura/provider-rootly/internal/controller/cluster/schedule/schedulerotationuser"
 	team "github.com/nikogura/provider-rootly/internal/controller/cluster/team/team"
 )
 
@@ -28,6 +30,8 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		heartbeat.Setup,
 		providerconfig.Setup,
 		schedule.Setup,
+		schedulerotation.Setup,
+		schedulerotationuser.Setup,
 		team.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
@@ -47,6 +51,8 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		heartbeat.SetupGated,
 		providerconfig.SetupGated,
 		schedule.SetupGated,
+		schedulerotation.SetupGated,
+		schedulerotationuser.SetupGated,
 		team.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
@@ -65,6 +71,8 @@ func SetupWebhookWithManager(mgr ctrl.Manager) error {
 		heartbeat.SetupWebhookWithManager,
 		providerconfig.SetupWebhookWithManager,
 		schedule.SetupWebhookWithManager,
+		schedulerotation.SetupWebhookWithManager,
+		schedulerotationuser.SetupWebhookWithManager,
 		team.SetupWebhookWithManager,
 	} {
 		if err := setup(mgr); err != nil {

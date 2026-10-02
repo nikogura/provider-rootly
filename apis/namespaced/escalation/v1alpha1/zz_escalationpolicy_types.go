@@ -178,7 +178,7 @@ type EscalationPolicyStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// EscalationPolicy is the Schema for the EscalationPolicys API. <no value>
+// EscalationPolicy is the Schema for the EscalationPolicys API. An escalation policy: who is paged for an alert, in what order, and how many times.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"

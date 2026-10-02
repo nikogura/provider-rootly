@@ -1,35 +1,21 @@
-<!--
-Thank you for helping to improve Crossplane!
-
-Please read through https://git.io/fj2m9 if this is your first time opening a
-Crossplane pull request. Find us in https://slack.crossplane.io/messages/dev if
-you need any help contributing.
--->
-
-### Description of your changes
+### Description Of Your Changes
 
 <!--
-Briefly describe what this pull request does. Be sure to direct your reviewers'
-attention to anything that needs special consideration.
-
-We love pull requests that resolve an open Crossplane issue. If yours does, you
-can uncomment the below line to indicate which issue your PR fixes, for example
-"Fixes #500":
-
+Briefly describe what this pull request does. Direct reviewers' attention to
+anything that needs special consideration. If it resolves an issue, name it:
+"Fixes #500".
 -->
 Fixes #
 
 I have:
 
-- [ ] Read and followed Crossplane's [contribution process].
-- [ ] Run `make reviewable test` to ensure this PR is ready for review.
+- [ ] Run `make reviewable test`, so generated code is current and lint and tests pass.
+- [ ] Added or updated tests for hand-maintained code under `config/` and `internal/clients`.
 
-### How has this code been tested
+### How Has This Code Been Tested
 
 <!--
-Before reviewers can be confident in the correctness of this pull request, it
-needs to tested and shown to be correct. Briefly describe the testing that has
-already been done or which is planned for this change.
+Describe the testing already done or planned for this change. A managed
+resource is not tested until it has reconciled against a real Rootly
+organization.
 -->
-
-[contribution process]: https://git.io/fj2m9

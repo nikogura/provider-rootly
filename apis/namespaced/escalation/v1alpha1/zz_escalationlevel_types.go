@@ -218,7 +218,7 @@ type EscalationLevelStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// EscalationLevel is the Schema for the EscalationLevels API. <no value>
+// EscalationLevel is the Schema for the EscalationLevels API. One level of an escalation policy: who is notified at that step, and the delay before the next.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"

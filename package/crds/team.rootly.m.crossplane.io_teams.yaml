@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Team is the Schema for the Teams API. <no value>
+        description: 'Team is the Schema for the Teams API. A Rootly team: a group
+          of users that owns schedules, escalation policies and alert sources.'
         properties:
           apiVersion:
             description: |-

@@ -34,6 +34,26 @@ func Configure(p *ujconfig.Provider) {
 		r.ShortGroup = "schedule"
 		r.Kind = "Schedule"
 	})
+	p.AddResourceConfigurator("rootly_schedule_rotation", func(r *ujconfig.Resource) {
+		r.ShortGroup = "schedule"
+		r.Kind = "ScheduleRotation"
+		// A rotation belongs to exactly one schedule: reference it by name.
+		r.References["schedule_id"] = ujconfig.Reference{
+			TerraformName: "rootly_schedule",
+		}
+	})
+	p.AddResourceConfigurator("rootly_schedule_rotation_user", func(r *ujconfig.Resource) {
+		r.ShortGroup = "schedule"
+		r.Kind = "ScheduleRotationUser"
+		// One user's place in one rotation. Upstream deprecates this resource
+		// in favour of the rotation's inline scheduleRotationMembers, which
+		// needs the account's schedule-nesting feature; this kind is the way
+		// to place users without it. Use one or the other on a rotation, never
+		// both -- they would each reconcile the other's members away.
+		r.References["schedule_rotation_id"] = ujconfig.Reference{
+			TerraformName: "rootly_schedule_rotation",
+		}
+	})
 	p.AddResourceConfigurator("rootly_heartbeat", func(r *ujconfig.Resource) {
 		r.ShortGroup = "heartbeat"
 		r.Kind = "Heartbeat"

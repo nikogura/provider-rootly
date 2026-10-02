@@ -15,17 +15,18 @@ import (
 // always learned from the provider after creation. This map is also the
 // provider's scope -- only resources listed here are generated.
 var ExternalNameConfigs = map[string]config.ExternalName{
-	"rootly_team":              config.IdentifierFromProvider,
-	"rootly_escalation_policy": config.IdentifierFromProvider,
-	"rootly_escalation_level":  config.IdentifierFromProvider,
-	"rootly_schedule":          config.IdentifierFromProvider,
-	"rootly_heartbeat":         config.IdentifierFromProvider,
-	"rootly_alerts_source":     config.IdentifierFromProvider,
+	"rootly_team":                   config.IdentifierFromProvider,
+	"rootly_escalation_policy":      config.IdentifierFromProvider,
+	"rootly_escalation_level":       config.IdentifierFromProvider,
+	"rootly_schedule":               config.IdentifierFromProvider,
+	"rootly_schedule_rotation":      config.IdentifierFromProvider,
+	"rootly_schedule_rotation_user": config.IdentifierFromProvider,
+	"rootly_heartbeat":              config.IdentifierFromProvider,
+	"rootly_alerts_source":          config.IdentifierFromProvider,
 }
 
-// ExternalNameConfigurations applies all external name configs listed in the
-// table ExternalNameConfigs and sets the version of those resources to
-// v1beta1 assuming they will be tested.
+// ExternalNameConfigurations applies the external name configs listed in the
+// table ExternalNameConfigs.
 func ExternalNameConfigurations() (opt config.ResourceOption) {
 	opt = func(r *config.Resource) {
 		if e, ok := ExternalNameConfigs[r.Name]; ok {

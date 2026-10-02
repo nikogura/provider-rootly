@@ -1,0 +1,14 @@
+apiVersion: schedule.rootly.crossplane.io/v1alpha1
+kind: ScheduleRotationUser
+metadata:
+  name: platform-oncall-weekly-1
+spec:
+  forProvider:
+    # The rotation is referenced by name. The user is a Rootly user ID: users
+    # are not a managed kind in this provider.
+    scheduleRotationIdRef:
+      name: platform-oncall-weekly
+    userId: 12345
+    position: 1
+  providerConfigRef:
+    name: default

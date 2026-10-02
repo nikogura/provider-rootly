@@ -217,7 +217,7 @@ type ScheduleStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Schedule is the Schema for the Schedules API. <no value>
+// Schedule is the Schema for the Schedules API. An on-call schedule. Who is on call, and when, is set by the rotations that belong to it.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"

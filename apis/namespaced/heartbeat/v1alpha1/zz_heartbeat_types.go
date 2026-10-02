@@ -198,7 +198,7 @@ type HeartbeatStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Heartbeat is the Schema for the Heartbeats API. <no value>
+// Heartbeat is the Schema for the Heartbeats API. A heartbeat: Rootly raises an alert when an expected ping does not arrive within the interval.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"

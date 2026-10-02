@@ -453,7 +453,7 @@ type TeamStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Team is the Schema for the Teams API. <no value>
+// Team is the Schema for the Teams API. A Rootly team: a group of users that owns schedules, escalation policies and alert sources.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"

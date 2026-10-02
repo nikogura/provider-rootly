@@ -17,6 +17,8 @@ The SRE set, deliberately small to start:
 | `EscalationPolicy` | `escalation.rootly.crossplane.io` | `rootly_escalation_policy` |
 | `EscalationLevel` | `escalation.rootly.crossplane.io` | `rootly_escalation_level` |
 | `Schedule` | `schedule.rootly.crossplane.io` | `rootly_schedule` |
+| `ScheduleRotation` | `schedule.rootly.crossplane.io` | `rootly_schedule_rotation` |
+| `ScheduleRotationUser` | `schedule.rootly.crossplane.io` | `rootly_schedule_rotation_user` |
 | `Heartbeat` | `heartbeat.rootly.crossplane.io` | `rootly_heartbeat` |
 | `AlertsSource` | `alerts.rootly.crossplane.io` | `rootly_alerts_source` |
 
@@ -24,6 +26,16 @@ Every kind also exists namespaced under `*.rootly.m.crossplane.io` for
 Crossplane v2 namespaced composition. Rootly assigns every resource its ID, so
 external names are always learned from the API after creation -- never set one
 by hand.
+
+A `ScheduleRotation` takes its members one of two ways. Use one per rotation,
+never both -- each would reconcile the other's members away:
+
+- `ScheduleRotationUser`, one per user and position. Upstream deprecates
+  `rootly_schedule_rotation_user` and will drop it in its next major version, so
+  this kind goes away with that upgrade.
+- `scheduleRotationMembers`, inline on the rotation. This is the upstream
+  replacement, and it requires the schedule-nesting feature on the Rootly
+  account.
 
 The upstream provider covers ~229 resources; widening the scope is one entry in
 `config/external_name.go` and a regenerate.
