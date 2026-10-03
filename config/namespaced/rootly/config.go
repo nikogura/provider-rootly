@@ -61,5 +61,13 @@ func Configure(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("rootly_alerts_source", func(r *ujconfig.Resource) {
 		r.ShortGroup = "alerts"
 		r.Kind = "AlertsSource"
+		// alert_template_attributes and alert_source_fields_attributes conflict
+		// upstream, and the upstream Read always stores the template block,
+		// as one empty element when the API has none. Late-initializing
+		// either would put both in the spec and have every later refresh
+		// rejected. What the user declares is what is sent.
+		r.LateInitializer = ujconfig.LateInitializer{
+			IgnoredFields: []string{"alert_template_attributes", "alert_source_fields_attributes"},
+		}
 	})
 }

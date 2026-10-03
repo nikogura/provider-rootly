@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
+	"github.com/stretchr/testify/assert"
 )
 
 // Configure only registers configurator callbacks; they run inside
@@ -79,6 +80,10 @@ func TestConfigure(t *testing.T) {
 		{resource: "rootly_schedule_rotation", field: "schedule_id", target: "rootly_schedule"},
 		{resource: "rootly_schedule_rotation_user", field: "schedule_rotation_id", target: "rootly_schedule_rotation"},
 	}
+
+	ignored := p.Resources["rootly_alerts_source"].LateInitializer.IgnoredFields
+	assert.ElementsMatch(t, []string{"alert_template_attributes", "alert_source_fields_attributes"}, ignored,
+		"the conflicting AlertsSource blocks must not be late-initialized")
 
 	for _, want := range references {
 		ref, ok := p.Resources[want.resource].References[want.field]

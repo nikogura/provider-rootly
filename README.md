@@ -37,6 +37,14 @@ never both -- each would reconcile the other's members away:
   replacement, and it requires the schedule-nesting feature on the Rootly
   account.
 
+An `AlertsSource` takes either `alertTemplateAttributes` or
+`alertSourceFieldsAttributes`, never both; the upstream provider rejects a
+configuration with both before it talks to Rootly. Neither is
+late-initialized, so the spec carries only the one you declare. If an
+`AlertsSource` reports `Conflicting configuration arguments`, an earlier
+provider release late-initialized the other block into its spec: remove the
+block you do not manage from `spec.forProvider` and it reconciles again.
+
 The upstream provider covers ~229 resources; widening the scope is one entry in
 `config/external_name.go` and a regenerate.
 
