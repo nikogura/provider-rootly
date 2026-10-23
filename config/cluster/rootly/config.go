@@ -71,6 +71,12 @@ func configureOnCall(p *ujconfig.Provider) {
 	p.AddResourceConfigurator(tfHeartbeat, func(r *ujconfig.Resource) {
 		r.ShortGroup = groupHeartbeat
 		r.Kind = "Heartbeat"
+		// The secret is the bearer token that authenticates a ping, so anyone
+		// holding it can keep the heartbeat alive. Upstream does not flag it
+		// as sensitive, which would publish it in clear in the status of
+		// every Heartbeat. Flagging it here drops it from the status and
+		// writes it to the connection secret instead.
+		r.TerraformResource.Schema["secret"].Sensitive = true
 	})
 }
 

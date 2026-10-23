@@ -104,9 +104,6 @@ type HeartbeatObservation struct {
 	// URL to receive heartbeat pings.
 	PingURL *string `json:"pingUrl,omitempty" tf:"ping_url,omitempty"`
 
-	// Secret used as bearer token when pinging heartbeat.
-	Secret *string `json:"secret,omitempty" tf:"secret,omitempty"`
-
 	// Value must be one of `waiting`, `active`, `expired`.
 	Status *string `json:"status,omitempty" tf:"status,omitempty"`
 }

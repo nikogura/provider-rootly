@@ -256,11 +256,6 @@ func (in *HeartbeatObservation) DeepCopyInto(out *HeartbeatObservation) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.Secret != nil {
-		in, out := &in.Secret, &out.Secret
-		*out = new(string)
-		**out = **in
-	}
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
 		*out = new(string)

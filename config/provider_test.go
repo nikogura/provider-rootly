@@ -162,6 +162,13 @@ func TestGetProvider(t *testing.T) {
 			if !page.TerraformResource.Schema["authentication_password"].Sensitive {
 				t.Error("rootly_status_page.authentication_password is not sensitive")
 			}
+
+			// Upstream leaves the heartbeat ping token unflagged. It must
+			// not be published in the status.
+			heartbeat := p.Resources[tfHeartbeat]
+			if !heartbeat.TerraformResource.Schema["secret"].Sensitive {
+				t.Error("rootly_heartbeat.secret is not sensitive")
+			}
 		})
 	}
 }

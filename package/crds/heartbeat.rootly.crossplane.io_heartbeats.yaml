@@ -340,9 +340,6 @@ spec:
                   pingUrl:
                     description: URL to receive heartbeat pings.
                     type: string
-                  secret:
-                    description: Secret used as bearer token when pinging heartbeat.
-                    type: string
                   status:
                     description: Value must be one of `waiting`, `active`, `expired`.
                     type: string

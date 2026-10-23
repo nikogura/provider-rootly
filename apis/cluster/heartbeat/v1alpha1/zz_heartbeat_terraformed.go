@@ -21,7 +21,7 @@ func (mg *Heartbeat) GetTerraformResourceType() string {
 
 // GetConnectionDetailsMapping for this Heartbeat
 func (tr *Heartbeat) GetConnectionDetailsMapping() map[string]string {
-	return nil
+	return map[string]string{"secret": "status.atProvider.secret"}
 }
 
 // GetObservation of this Heartbeat
