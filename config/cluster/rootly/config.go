@@ -50,6 +50,41 @@ func configureOnCall(p *ujconfig.Provider) {
 		r.References["escalation_policy_id"] = ujconfig.Reference{
 			TerraformName: tfEscalationPolicy,
 		}
+		// Without a path, Rootly puts the level on the policy's default path.
+		// A level on any other path names that EscalationPath.
+		r.References["escalation_policy_path_id"] = ujconfig.Reference{
+			TerraformName: tfEscalationPath,
+		}
+	})
+	p.AddResourceConfigurator(tfEscalationPath, func(r *ujconfig.Resource) {
+		r.ShortGroup = groupEscalation
+		r.Kind = "EscalationPath"
+		// Rootly creates a default path with every policy; this kind adds the
+		// others, each chosen for an alert by its rules. The policy is
+		// optional in the schema but the create request is addressed to it,
+		// so every path names one.
+		r.References["escalation_policy_id"] = ujconfig.Reference{
+			TerraformName: tfEscalationPolicy,
+		}
+		// A deferral path that hands over with execute_path names the path it
+		// hands over to.
+		r.References["after_deferral_path_id"] = ujconfig.Reference{
+			TerraformName: tfEscalationPath,
+		}
+		// A rule's urgencyIds and serviceIds take the Rootly ids as written.
+		// A reference would make the escalation API package import alerts
+		// and service, and service already imports escalation for a
+		// Service's escalationPolicyIdRef: Go rejects the import cycle.
+		//
+		// position is the path's place among all of its policy's paths,
+		// including the default one Rootly made, so adding or removing a
+		// sibling path can move it. Late-initialized, the copied position
+		// would go stale with the next sibling, and every reconcile would
+		// send the old one back, reordering the paths each time. Set it in
+		// the spec to fix the order; otherwise it stays in status.atProvider.
+		r.LateInitializer = ujconfig.LateInitializer{
+			IgnoredFields: []string{"position"},
+		}
 	})
 	p.AddResourceConfigurator(tfSchedule, func(r *ujconfig.Resource) {
 		r.ShortGroup = groupSchedule

@@ -17,6 +17,15 @@ func (l *EscalationLevelList) GetItems() []resource.Managed {
 	return items
 }
 
+// GetItems of this EscalationPathList.
+func (l *EscalationPathList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
 // GetItems of this EscalationPolicyList.
 func (l *EscalationPolicyList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))

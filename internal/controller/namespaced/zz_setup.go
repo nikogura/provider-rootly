@@ -13,6 +13,7 @@ import (
 	alertssource "github.com/nikogura/provider-rootly/internal/controller/namespaced/alerts/alertssource"
 	alerturgency "github.com/nikogura/provider-rootly/internal/controller/namespaced/alerts/alerturgency"
 	escalationlevel "github.com/nikogura/provider-rootly/internal/controller/namespaced/escalation/escalationlevel"
+	escalationpath "github.com/nikogura/provider-rootly/internal/controller/namespaced/escalation/escalationpath"
 	escalationpolicy "github.com/nikogura/provider-rootly/internal/controller/namespaced/escalation/escalationpolicy"
 	heartbeat "github.com/nikogura/provider-rootly/internal/controller/namespaced/heartbeat/heartbeat"
 	incidenttype "github.com/nikogura/provider-rootly/internal/controller/namespaced/incident/incidenttype"
@@ -42,6 +43,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		alertssource.Setup,
 		alerturgency.Setup,
 		escalationlevel.Setup,
+		escalationpath.Setup,
 		escalationpolicy.Setup,
 		heartbeat.Setup,
 		incidenttype.Setup,
@@ -77,6 +79,7 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		alertssource.SetupGated,
 		alerturgency.SetupGated,
 		escalationlevel.SetupGated,
+		escalationpath.SetupGated,
 		escalationpolicy.SetupGated,
 		heartbeat.SetupGated,
 		incidenttype.SetupGated,
@@ -111,6 +114,7 @@ func SetupWebhookWithManager(mgr ctrl.Manager) error {
 		alertssource.SetupWebhookWithManager,
 		alerturgency.SetupWebhookWithManager,
 		escalationlevel.SetupWebhookWithManager,
+		escalationpath.SetupWebhookWithManager,
 		escalationpolicy.SetupWebhookWithManager,
 		heartbeat.SetupWebhookWithManager,
 		incidenttype.SetupWebhookWithManager,

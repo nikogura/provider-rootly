@@ -31,7 +31,16 @@ type EscalationLevelInitParameters struct {
 	EscalationPolicyIDSelector *v2.NamespacedSelector `json:"escalationPolicyIdSelector,omitempty" tf:"-"`
 
 	// The ID of the dynamic escalation policy path the level will belong to. If nothing is specified it will add the level to your default path.
+	// +crossplane:generate:reference:type=github.com/nikogura/provider-rootly/apis/namespaced/escalation/v1alpha1.EscalationPath
 	EscalationPolicyPathID *string `json:"escalationPolicyPathId,omitempty" tf:"escalation_policy_path_id,omitempty"`
+
+	// Reference to a EscalationPath in escalation to populate escalationPolicyPathId.
+	// +kubebuilder:validation:Optional
+	EscalationPolicyPathIDRef *v2.NamespacedReference `json:"escalationPolicyPathIdRef,omitempty" tf:"-"`
+
+	// Selector for a EscalationPath in escalation to populate escalationPolicyPathId.
+	// +kubebuilder:validation:Optional
+	EscalationPolicyPathIDSelector *v2.NamespacedSelector `json:"escalationPolicyPathIdSelector,omitempty" tf:"-"`
 
 	// Escalation level's notification targets
 	NotificationTargetParams []NotificationTargetParamsInitParameters `json:"notificationTargetParams,omitempty" tf:"notification_target_params,omitempty"`
@@ -116,8 +125,17 @@ type EscalationLevelParameters struct {
 	EscalationPolicyIDSelector *v2.NamespacedSelector `json:"escalationPolicyIdSelector,omitempty" tf:"-"`
 
 	// The ID of the dynamic escalation policy path the level will belong to. If nothing is specified it will add the level to your default path.
+	// +crossplane:generate:reference:type=github.com/nikogura/provider-rootly/apis/namespaced/escalation/v1alpha1.EscalationPath
 	// +kubebuilder:validation:Optional
 	EscalationPolicyPathID *string `json:"escalationPolicyPathId,omitempty" tf:"escalation_policy_path_id,omitempty"`
+
+	// Reference to a EscalationPath in escalation to populate escalationPolicyPathId.
+	// +kubebuilder:validation:Optional
+	EscalationPolicyPathIDRef *v2.NamespacedReference `json:"escalationPolicyPathIdRef,omitempty" tf:"-"`
+
+	// Selector for a EscalationPath in escalation to populate escalationPolicyPathId.
+	// +kubebuilder:validation:Optional
+	EscalationPolicyPathIDSelector *v2.NamespacedSelector `json:"escalationPolicyPathIdSelector,omitempty" tf:"-"`
 
 	// Escalation level's notification targets
 	// +kubebuilder:validation:Optional

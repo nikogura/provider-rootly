@@ -38,6 +38,118 @@ func (mg *EscalationLevel) ResolveReferences(ctx context.Context, c client.Reade
 	mg.Spec.ForProvider.EscalationPolicyIDRef = rsp.ResolvedReference
 
 	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.EscalationPolicyPathID),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.ForProvider.EscalationPolicyPathIDRef,
+		Selector:     mg.Spec.ForProvider.EscalationPolicyPathIDSelector,
+		To: reference.To{
+			List:    &EscalationPathList{},
+			Managed: &EscalationPath{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.EscalationPolicyPathID")
+	}
+	mg.Spec.ForProvider.EscalationPolicyPathID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.EscalationPolicyPathIDRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.EscalationPolicyID),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.InitProvider.EscalationPolicyIDRef,
+		Selector:     mg.Spec.InitProvider.EscalationPolicyIDSelector,
+		To: reference.To{
+			List:    &EscalationPolicyList{},
+			Managed: &EscalationPolicy{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.InitProvider.EscalationPolicyID")
+	}
+	mg.Spec.InitProvider.EscalationPolicyID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.InitProvider.EscalationPolicyIDRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.EscalationPolicyPathID),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.InitProvider.EscalationPolicyPathIDRef,
+		Selector:     mg.Spec.InitProvider.EscalationPolicyPathIDSelector,
+		To: reference.To{
+			List:    &EscalationPathList{},
+			Managed: &EscalationPath{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.InitProvider.EscalationPolicyPathID")
+	}
+	mg.Spec.InitProvider.EscalationPolicyPathID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.InitProvider.EscalationPolicyPathIDRef = rsp.ResolvedReference
+
+	return nil
+}
+
+// ResolveReferences of this EscalationPath.
+func (mg *EscalationPath) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPINamespacedResolver(c, mg)
+
+	var rsp reference.NamespacedResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.AfterDeferralPathID),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.ForProvider.AfterDeferralPathIDRef,
+		Selector:     mg.Spec.ForProvider.AfterDeferralPathIDSelector,
+		To: reference.To{
+			List:    &EscalationPathList{},
+			Managed: &EscalationPath{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.AfterDeferralPathID")
+	}
+	mg.Spec.ForProvider.AfterDeferralPathID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.AfterDeferralPathIDRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.EscalationPolicyID),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.ForProvider.EscalationPolicyIDRef,
+		Selector:     mg.Spec.ForProvider.EscalationPolicyIDSelector,
+		To: reference.To{
+			List:    &EscalationPolicyList{},
+			Managed: &EscalationPolicy{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.EscalationPolicyID")
+	}
+	mg.Spec.ForProvider.EscalationPolicyID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.EscalationPolicyIDRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.AfterDeferralPathID),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.InitProvider.AfterDeferralPathIDRef,
+		Selector:     mg.Spec.InitProvider.AfterDeferralPathIDSelector,
+		To: reference.To{
+			List:    &EscalationPathList{},
+			Managed: &EscalationPath{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.InitProvider.AfterDeferralPathID")
+	}
+	mg.Spec.InitProvider.AfterDeferralPathID = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.InitProvider.AfterDeferralPathIDRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.EscalationPolicyID),
 		Extract:      reference.ExternalName(),
 		Namespace:    mg.GetNamespace(),

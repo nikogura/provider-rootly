@@ -18,6 +18,7 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	tfTeam:                                   config.IdentifierFromProvider,
 	tfEscalationPolicy:                       config.IdentifierFromProvider,
 	tfEscalationLevel:                        config.IdentifierFromProvider,
+	tfEscalationPath:                         config.IdentifierFromProvider,
 	tfSchedule:                               config.IdentifierFromProvider,
 	tfScheduleRotation:                       config.IdentifierFromProvider,
 	tfScheduleRotationUser:                   config.IdentifierFromProvider,

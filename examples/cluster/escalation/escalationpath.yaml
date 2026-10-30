@@ -1,0 +1,26 @@
+apiVersion: escalation.rootly.crossplane.io/v1alpha1
+kind: EscalationPath
+metadata:
+  name: platform-critical-working-hours
+spec:
+  forProvider:
+    name: Critical during working hours
+    # Rootly creates the policy's default path itself; this path is chosen
+    # instead when every rule below matches.
+    escalationPolicyIdRef:
+      name: platform-default
+    default: false
+    matchMode: match-all-rules
+    rules:
+      - ruleType: alert_urgency
+        # The Rootly id of an AlertUrgency, as shown in its
+        # status.atProvider.id. A rule cannot reference one by name: see the
+        # README.
+        urgencyIds:
+          - 00000000-0000-0000-0000-000000000000
+      - ruleType: working_hour
+        withinWorkingHour: true
+    # An EscalationLevel joins this path by naming it in
+    # escalationPolicyPathIdRef; without one, a level is on the default path.
+  providerConfigRef:
+    name: default

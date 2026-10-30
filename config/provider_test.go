@@ -24,6 +24,7 @@ func TestGetProvider(t *testing.T) {
 		tfTeam:                                   {shortGroup: groupTeam, kind: "Team"},
 		tfEscalationPolicy:                       {shortGroup: groupEscalation, kind: "EscalationPolicy"},
 		tfEscalationLevel:                        {shortGroup: groupEscalation, kind: "EscalationLevel"},
+		tfEscalationPath:                         {shortGroup: groupEscalation, kind: "EscalationPath"},
 		tfSchedule:                               {shortGroup: groupSchedule, kind: "Schedule"},
 		tfScheduleRotation:                       {shortGroup: groupSchedule, kind: "ScheduleRotation"},
 		tfScheduleRotationUser:                   {shortGroup: groupSchedule, kind: "ScheduleRotationUser"},
@@ -103,6 +104,9 @@ func TestGetProvider(t *testing.T) {
 				target   string
 			}{
 				{resource: tfEscalationLevel, field: "escalation_policy_id", target: tfEscalationPolicy},
+				{resource: tfEscalationLevel, field: "escalation_policy_path_id", target: tfEscalationPath},
+				{resource: tfEscalationPath, field: "escalation_policy_id", target: tfEscalationPolicy},
+				{resource: tfEscalationPath, field: "after_deferral_path_id", target: tfEscalationPath},
 				{resource: tfScheduleRotation, field: "schedule_id", target: tfSchedule},
 				{resource: tfScheduleRotationUser, field: "schedule_rotation_id", target: tfScheduleRotation},
 				{resource: tfAlertRoute, field: "alerts_source_ids", target: tfAlertsSource},

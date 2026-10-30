@@ -16,6 +16,7 @@ The on-call set, and the kinds that take an alert through to a status page:
 | `Team` | `team.rootly.crossplane.io` | `rootly_team` |
 | `EscalationPolicy` | `escalation.rootly.crossplane.io` | `rootly_escalation_policy` |
 | `EscalationLevel` | `escalation.rootly.crossplane.io` | `rootly_escalation_level` |
+| `EscalationPath` | `escalation.rootly.crossplane.io` | `rootly_escalation_path` |
 | `Schedule` | `schedule.rootly.crossplane.io` | `rootly_schedule` |
 | `ScheduleRotation` | `schedule.rootly.crossplane.io` | `rootly_schedule_rotation` |
 | `ScheduleRotationUser` | `schedule.rootly.crossplane.io` | `rootly_schedule_rotation_user` |
@@ -63,8 +64,9 @@ Fields Rootly owns and changes on its own are not late-initialized, so the
 provider never sends a stale copy back: `lastPingedAt`, `expiresAt` and `status`
 on a `Heartbeat`, `status` on an `AlertsSource`, `name`, `description` and
 `status` on a `StatusPageComponent`, `createdByUserId` and
-`lastUpdatedByUserId` on an `EscalationPolicy`, and `deletedAt` on an
-`AlertUrgency`. They stay visible in `status.atProvider`. If one of these
+`lastUpdatedByUserId` on an `EscalationPolicy`, `position` on an
+`EscalationPath`, and `deletedAt` on an `AlertUrgency`. They stay visible in
+`status.atProvider`. If one of these
 resources updates on every reconcile, an earlier provider release
 late-initialized the field into its spec: remove it from `spec.forProvider`
 once and the updates stop.
@@ -108,6 +110,15 @@ maps, `serviceTarget`, `groupTarget`, `functionalityTarget`,
 `escalationPolicyTarget` or `userTarget`, each holding the target's Rootly
 `id` and `name`. A reference resolves a single id field, not a map, so these
 take the id as written.
+
+Rootly creates a default `EscalationPath` with every `EscalationPolicy`. An
+`EscalationPath` adds another, chosen for an alert by its `rules` (alert
+urgency, working hours, service, alert source and more). It names its policy
+in `escalationPolicyIdRef`, and an `EscalationLevel` joins it by naming it in
+`escalationPolicyPathIdRef`; a level without one is on the default path. A
+rule's `urgencyIds` and `serviceIds` take Rootly ids as written: a reference
+from the escalation group to `AlertUrgency` or `Service` would be a Go import
+cycle, since a `Service` already references its `EscalationPolicy`.
 
 A `StatusPage` with `authenticationEnabled` takes its password from a secret
 through `authenticationPasswordSecretRef`; upstream does not flag the field as

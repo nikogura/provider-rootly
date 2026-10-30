@@ -1,0 +1,1292 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.20.1
+  name: escalationpaths.escalation.rootly.crossplane.io
+spec:
+  group: escalation.rootly.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - rootly
+    kind: EscalationPath
+    listKind: EscalationPathList
+    plural: escalationpaths
+    singular: escalationpath
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: 'EscalationPath is the Schema for the EscalationPaths API. A
+          path through an escalation policy: the rules, such as alert urgency or working
+          hours, that send an alert down it, and how often it repeats. Its levels
+          are the EscalationLevel kinds that name it.'
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EscalationPathSpec defines the desired state of EscalationPath
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  afterDeferralBehavior:
+                    description: What happens after a deferral path finishes. Required
+                      for deferral paths.. Value must be one of `re_evaluate`, `execute_path`.
+                    type: string
+                  afterDeferralPathId:
+                    description: The escalation path to execute after this deferral
+                      path when after_deferral_behavior is execute_path.
+                    type: string
+                  afterDeferralPathIdRef:
+                    description: Reference to a EscalationPath in escalation to populate
+                      afterDeferralPathId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  afterDeferralPathIdSelector:
+                    description: Selector for a EscalationPath in escalation to populate
+                      afterDeferralPathId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  default:
+                    description: Whether this escalation path is the default path.
+                      Value must be one of true or false
+                    type: boolean
+                  escalationPolicyId:
+                    description: The ID of the escalation policy
+                    type: string
+                  escalationPolicyIdRef:
+                    description: Reference to a EscalationPolicy in escalation to
+                      populate escalationPolicyId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  escalationPolicyIdSelector:
+                    description: Selector for a EscalationPolicy in escalation to
+                      populate escalationPolicyId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  initialDelay:
+                    description: Initial delay for escalation path in minutes. Maximum
+                      1 week (10080).
+                    type: number
+                  matchMode:
+                    description: How path rules are matched.. Value must be one of
+                      `match-all-rules`, `match-any-rule`.
+                    type: string
+                  name:
+                    description: The name of the escalation path
+                    type: string
+                  notificationType:
+                    description: Notification rule type
+                    type: string
+                  pathType:
+                    description: The type of escalation path. Cannot be changed after
+                      creation.. Value must be one of `escalation`, `deferral`.
+                    type: string
+                  position:
+                    description: The position of this path in the paths for this EP.
+                    type: number
+                  repeat:
+                    description: Whether this path should be repeated until someone
+                      acknowledges the alert. Value must be one of true or false
+                    type: boolean
+                  repeatCount:
+                    description: The number of times this path will be executed until
+                      someone acknowledges the alert
+                    type: number
+                  rules:
+                    description: Escalation path rules
+                    items:
+                      properties:
+                        fieldableId:
+                          description: The ID of the alert field. Only used with `field`
+                            rule type.
+                          type: string
+                        fieldableType:
+                          description: The type of the fieldable. Only used with `field`
+                            rule type. Value must be one of `AlertField`.
+                          type: string
+                        jsonPath:
+                          description: JSON path to extract value from payload
+                          type: string
+                        operator:
+                          description: 'How the value should be matched. For `json_path`
+                            rule type: `is`, `is_not`, `contains`, `does_not_contain`.
+                            For `field` rule type: `is`, `is_not`, `contains`, `does_not_contain`,
+                            `is_one_of`, `is_not_one_of`, `is_empty`, `is_not_empty`,
+                            `contains_key`, `does_not_contain_key`, `starts_with`,
+                            `does_not_start_with`, `matches`, `does_not_match`. For
+                            `source` rule type: `is`, `is_not`, `is_one_of`, `is_not_one_of`.
+                            For `related_incidents` rule type: `is_set`, `is_not_set`.'
+                          type: string
+                        ruleType:
+                          description: The type of the escalation path rule. Value
+                            must be one of `alert_urgency`, `working_hour`, `json_path`,
+                            `field`, `service`, `deferral_window`, `source`, `related_incidents`.
+                          type: string
+                        serviceIds:
+                          description: Service ids for which this escalation path
+                            should be used. Only used with `service` rule type.
+                          items:
+                            type: string
+                          type: array
+                        timeBlocks:
+                          description: Time windows during which alerts are deferred.
+                            Only used with `deferral_window` rule type.
+                          items:
+                            properties:
+                              allDay:
+                                description: Whether this time block covers the entire
+                                  day
+                                type: boolean
+                              endTime:
+                                description: Formatted as HH:MM
+                                type: string
+                              friday:
+                                description: Whether the time block applies on Friday
+                                type: boolean
+                              monday:
+                                description: Whether the time block applies on Monday
+                                type: boolean
+                              position:
+                                description: Position of the time block
+                                type: number
+                              saturday:
+                                description: Whether the time block applies on Saturday
+                                type: boolean
+                              startTime:
+                                description: Formatted as HH:MM
+                                type: string
+                              sunday:
+                                description: Whether the time block applies on Sunday
+                                type: boolean
+                              thursday:
+                                description: Whether the time block applies on Thursday
+                                type: boolean
+                              tuesday:
+                                description: Whether the time block applies on Tuesday
+                                type: boolean
+                              wednesday:
+                                description: Whether the time block applies on Wednesday
+                                type: boolean
+                            type: object
+                          type: array
+                        timeZone:
+                          description: Time zone for the deferral window (IANA format,
+                            e.g. `America/New_York`). Only used with `deferral_window`
+                            rule type.
+                          type: string
+                        urgencyIds:
+                          description: Alert urgency ids for which this escalation
+                            path should be used
+                          items:
+                            type: string
+                          type: array
+                        value:
+                          description: Value with which JSON path value should be
+                            matched
+                          type: string
+                        values:
+                          description: Values to match against. Used with `field`
+                            and `source` rule types.
+                          items:
+                            type: string
+                          type: array
+                        withinWorkingHour:
+                          description: Whether the escalation path should be used
+                            within working hours. Value must be one of true or false
+                          type: boolean
+                      type: object
+                    type: array
+                  timeRestrictionTimeZone:
+                    description: Time zone used for time restrictions.. Value must
+                      be one of `International Date Line West`, `Etc/GMT+12`, `American
+                      Samoa`, `Pacific/Pago_Pago`, `Midway Island`, `Pacific/Midway`,
+                      `Hawaii`, `Pacific/Honolulu`, `Alaska`, `America/Juneau`, `Pacific
+                      Time (US & Canada)`, `America/Los_Angeles`, `Tijuana`, `America/Tijuana`,
+                      `Arizona`, `America/Phoenix`, `Mazatlan`, `America/Mazatlan`,
+                      `Mountain Time (US & Canada)`, `America/Denver`, `Central America`,
+                      `America/Guatemala`, `Central Time (US & Canada)`, `America/Chicago`,
+                      `Chihuahua`, `America/Chihuahua`, `Guadalajara`, `America/Mexico_City`,
+                      `Mexico City`, `America/Mexico_City`, `Monterrey`, `America/Monterrey`,
+                      `Saskatchewan`, `America/Regina`, `Bogota`, `America/Bogota`,
+                      `Eastern Time (US & Canada)`, `America/New_York`, `Indiana (East)`,
+                      `America/Indiana/Indianapolis`, `Lima`, `America/Lima`, `Quito`,
+                      `America/Lima`, `Atlantic Time (Canada)`, `America/Halifax`,
+                      `Caracas`, `America/Caracas`, `Georgetown`, `America/Guyana`,
+                      `La Paz`, `America/La_Paz`, `Puerto Rico`, `America/Puerto_Rico`,
+                      `Santiago`, `America/Santiago`, `Newfoundland`, `America/St_Johns`,
+                      `Brasilia`, `America/Sao_Paulo`, `Buenos Aires`, `America/Argentina/Buenos_Aires`,
+                      `Montevideo`, `America/Montevideo`, `Greenland`, `America/Godthab`,
+                      `Mid-Atlantic`, `Atlantic/South_Georgia`, `Azores`, `Atlantic/Azores`,
+                      `Cape Verde Is.`, `Atlantic/Cape_Verde`, `Casablanca`, `Africa/Casablanca`,
+                      `Dublin`, `Europe/Dublin`, `Edinburgh`, `Europe/London`, `Lisbon`,
+                      `Europe/Lisbon`, `London`, `Europe/London`, `Monrovia`, `Africa/Monrovia`,
+                      `UTC`, `Etc/UTC`, `Amsterdam`, `Europe/Amsterdam`, `Belgrade`,
+                      `Europe/Belgrade`, `Berlin`, `Europe/Berlin`, `Bern`, `Europe/Zurich`,
+                      `Bratislava`, `Europe/Bratislava`, `Brussels`, `Europe/Brussels`,
+                      `Budapest`, `Europe/Budapest`, `Copenhagen`, `Europe/Copenhagen`,
+                      `Ljubljana`, `Europe/Ljubljana`, `Madrid`, `Europe/Madrid`,
+                      `Paris`, `Europe/Paris`, `Prague`, `Europe/Prague`, `Rome`,
+                      `Europe/Rome`, `Sarajevo`, `Europe/Sarajevo`, `Skopje`, `Europe/Skopje`,
+                      `Stockholm`, `Europe/Stockholm`, `Vienna`, `Europe/Vienna`,
+                      `Warsaw`, `Europe/Warsaw`, `West Central Africa`, `Africa/Algiers`,
+                      `Zagreb`, `Europe/Zagreb`, `Zurich`, `Europe/Zurich`, `Athens`,
+                      `Europe/Athens`, `Bucharest`, `Europe/Bucharest`, `Cairo`, `Africa/Cairo`,
+                      `Harare`, `Africa/Harare`, `Helsinki`, `Europe/Helsinki`, `Jerusalem`,
+                      `Asia/Jerusalem`, `Kaliningrad`, `Europe/Kaliningrad`, `Kyiv`,
+                      `Europe/Kiev`, `Pretoria`, `Africa/Johannesburg`, `Riga`, `Europe/Riga`,
+                      `Sofia`, `Europe/Sofia`, `Tallinn`, `Europe/Tallinn`, `Vilnius`,
+                      `Europe/Vilnius`, `Baghdad`, `Asia/Baghdad`, `Istanbul`, `Europe/Istanbul`,
+                      `Kuwait`, `Asia/Kuwait`, `Minsk`, `Europe/Minsk`, `Moscow`,
+                      `Europe/Moscow`, `Nairobi`, `Africa/Nairobi`, `Riyadh`, `Asia/Riyadh`,
+                      `St. Petersburg`, `Europe/Moscow`, `Volgograd`, `Europe/Volgograd`,
+                      `Tehran`, `Asia/Tehran`, `Abu Dhabi`, `Asia/Muscat`, `Baku`,
+                      `Asia/Baku`, `Muscat`, `Asia/Muscat`, `Samara`, `Europe/Samara`,
+                      `Tbilisi`, `Asia/Tbilisi`, `Yerevan`, `Asia/Yerevan`, `Kabul`,
+                      `Asia/Kabul`, `Almaty`, `Asia/Almaty`, `Astana`, `Asia/Almaty`,
+                      `Ekaterinburg`, `Asia/Yekaterinburg`, `Islamabad`, `Asia/Karachi`,
+                      `Karachi`, `Asia/Karachi`, `Tashkent`, `Asia/Tashkent`, `Chennai`,
+                      `Asia/Kolkata`, `Kolkata`, `Asia/Kolkata`, `Mumbai`, `Asia/Kolkata`,
+                      `New Delhi`, `Asia/Kolkata`, `Sri Jayawardenepura`, `Asia/Colombo`,
+                      `Kathmandu`, `Asia/Kathmandu`, `Dhaka`, `Asia/Dhaka`, `Urumqi`,
+                      `Asia/Urumqi`, `Rangoon`, `Asia/Rangoon`, `Bangkok`, `Asia/Bangkok`,
+                      `Hanoi`, `Asia/Bangkok`, `Jakarta`, `Asia/Jakarta`, `Krasnoyarsk`,
+                      `Asia/Krasnoyarsk`, `Novosibirsk`, `Asia/Novosibirsk`, `Beijing`,
+                      `Asia/Shanghai`, `Chongqing`, `Asia/Chongqing`, `Hong Kong`,
+                      `Asia/Hong_Kong`, `Irkutsk`, `Asia/Irkutsk`, `Kuala Lumpur`,
+                      `Asia/Kuala_Lumpur`, `Perth`, `Australia/Perth`, `Singapore`,
+                      `Asia/Singapore`, `Taipei`, `Asia/Taipei`, `Ulaanbaatar`, `Asia/Ulaanbaatar`,
+                      `Osaka`, `Asia/Tokyo`, `Sapporo`, `Asia/Tokyo`, `Seoul`, `Asia/Seoul`,
+                      `Tokyo`, `Asia/Tokyo`, `Yakutsk`, `Asia/Yakutsk`, `Adelaide`,
+                      `Australia/Adelaide`, `Darwin`, `Australia/Darwin`, `Brisbane`,
+                      `Australia/Brisbane`, `Canberra`, `Australia/Canberra`, `Guam`,
+                      `Pacific/Guam`, `Hobart`, `Australia/Hobart`, `Melbourne`, `Australia/Melbourne`,
+                      `Port Moresby`, `Pacific/Port_Moresby`, `Sydney`, `Australia/Sydney`,
+                      `Vladivostok`, `Asia/Vladivostok`, `Magadan`, `Asia/Magadan`,
+                      `New Caledonia`, `Pacific/Noumea`, `Solomon Is.`, `Pacific/Guadalcanal`,
+                      `Srednekolymsk`, `Asia/Srednekolymsk`, `Auckland`, `Pacific/Auckland`,
+                      `Fiji`, `Pacific/Fiji`, `Kamchatka`, `Asia/Kamchatka`, `Marshall
+                      Is.`, `Pacific/Majuro`, `Wellington`, `Pacific/Auckland`, `Chatham
+                      Is.`, `Pacific/Chatham`, `Nuku'alofa`, `Pacific/Tongatapu`,
+                      `Samoa`, `Pacific/Apia`, `Tokelau Is.`, `Pacific/Fakaofo`.
+                    type: string
+                  timeRestrictions:
+                    description: If time restrictions are set, alerts will follow
+                      this path when they arrive within the specified time ranges
+                      and meet the rules.
+                    items:
+                      properties:
+                        endDay:
+                          description: Value must be one of `monday`, `tuesday`, `wednesday`,
+                            `thursday`, `friday`, `saturday`, `sunday`.
+                          type: string
+                        endTime:
+                          description: Formatted as HH:MM
+                          type: string
+                        startDay:
+                          description: Value must be one of `monday`, `tuesday`, `wednesday`,
+                            `thursday`, `friday`, `saturday`, `sunday`.
+                          type: string
+                        startTime:
+                          description: Formatted as HH:MM
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  afterDeferralBehavior:
+                    description: What happens after a deferral path finishes. Required
+                      for deferral paths.. Value must be one of `re_evaluate`, `execute_path`.
+                    type: string
+                  afterDeferralPathId:
+                    description: The escalation path to execute after this deferral
+                      path when after_deferral_behavior is execute_path.
+                    type: string
+                  afterDeferralPathIdRef:
+                    description: Reference to a EscalationPath in escalation to populate
+                      afterDeferralPathId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  afterDeferralPathIdSelector:
+                    description: Selector for a EscalationPath in escalation to populate
+                      afterDeferralPathId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  default:
+                    description: Whether this escalation path is the default path.
+                      Value must be one of true or false
+                    type: boolean
+                  escalationPolicyId:
+                    description: The ID of the escalation policy
+                    type: string
+                  escalationPolicyIdRef:
+                    description: Reference to a EscalationPolicy in escalation to
+                      populate escalationPolicyId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  escalationPolicyIdSelector:
+                    description: Selector for a EscalationPolicy in escalation to
+                      populate escalationPolicyId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  initialDelay:
+                    description: Initial delay for escalation path in minutes. Maximum
+                      1 week (10080).
+                    type: number
+                  matchMode:
+                    description: How path rules are matched.. Value must be one of
+                      `match-all-rules`, `match-any-rule`.
+                    type: string
+                  name:
+                    description: The name of the escalation path
+                    type: string
+                  notificationType:
+                    description: Notification rule type
+                    type: string
+                  pathType:
+                    description: The type of escalation path. Cannot be changed after
+                      creation.. Value must be one of `escalation`, `deferral`.
+                    type: string
+                  position:
+                    description: The position of this path in the paths for this EP.
+                    type: number
+                  repeat:
+                    description: Whether this path should be repeated until someone
+                      acknowledges the alert. Value must be one of true or false
+                    type: boolean
+                  repeatCount:
+                    description: The number of times this path will be executed until
+                      someone acknowledges the alert
+                    type: number
+                  rules:
+                    description: Escalation path rules
+                    items:
+                      properties:
+                        fieldableId:
+                          description: The ID of the alert field. Only used with `field`
+                            rule type.
+                          type: string
+                        fieldableType:
+                          description: The type of the fieldable. Only used with `field`
+                            rule type. Value must be one of `AlertField`.
+                          type: string
+                        jsonPath:
+                          description: JSON path to extract value from payload
+                          type: string
+                        operator:
+                          description: 'How the value should be matched. For `json_path`
+                            rule type: `is`, `is_not`, `contains`, `does_not_contain`.
+                            For `field` rule type: `is`, `is_not`, `contains`, `does_not_contain`,
+                            `is_one_of`, `is_not_one_of`, `is_empty`, `is_not_empty`,
+                            `contains_key`, `does_not_contain_key`, `starts_with`,
+                            `does_not_start_with`, `matches`, `does_not_match`. For
+                            `source` rule type: `is`, `is_not`, `is_one_of`, `is_not_one_of`.
+                            For `related_incidents` rule type: `is_set`, `is_not_set`.'
+                          type: string
+                        ruleType:
+                          description: The type of the escalation path rule. Value
+                            must be one of `alert_urgency`, `working_hour`, `json_path`,
+                            `field`, `service`, `deferral_window`, `source`, `related_incidents`.
+                          type: string
+                        serviceIds:
+                          description: Service ids for which this escalation path
+                            should be used. Only used with `service` rule type.
+                          items:
+                            type: string
+                          type: array
+                        timeBlocks:
+                          description: Time windows during which alerts are deferred.
+                            Only used with `deferral_window` rule type.
+                          items:
+                            properties:
+                              allDay:
+                                description: Whether this time block covers the entire
+                                  day
+                                type: boolean
+                              endTime:
+                                description: Formatted as HH:MM
+                                type: string
+                              friday:
+                                description: Whether the time block applies on Friday
+                                type: boolean
+                              monday:
+                                description: Whether the time block applies on Monday
+                                type: boolean
+                              position:
+                                description: Position of the time block
+                                type: number
+                              saturday:
+                                description: Whether the time block applies on Saturday
+                                type: boolean
+                              startTime:
+                                description: Formatted as HH:MM
+                                type: string
+                              sunday:
+                                description: Whether the time block applies on Sunday
+                                type: boolean
+                              thursday:
+                                description: Whether the time block applies on Thursday
+                                type: boolean
+                              tuesday:
+                                description: Whether the time block applies on Tuesday
+                                type: boolean
+                              wednesday:
+                                description: Whether the time block applies on Wednesday
+                                type: boolean
+                            type: object
+                          type: array
+                        timeZone:
+                          description: Time zone for the deferral window (IANA format,
+                            e.g. `America/New_York`). Only used with `deferral_window`
+                            rule type.
+                          type: string
+                        urgencyIds:
+                          description: Alert urgency ids for which this escalation
+                            path should be used
+                          items:
+                            type: string
+                          type: array
+                        value:
+                          description: Value with which JSON path value should be
+                            matched
+                          type: string
+                        values:
+                          description: Values to match against. Used with `field`
+                            and `source` rule types.
+                          items:
+                            type: string
+                          type: array
+                        withinWorkingHour:
+                          description: Whether the escalation path should be used
+                            within working hours. Value must be one of true or false
+                          type: boolean
+                      type: object
+                    type: array
+                  timeRestrictionTimeZone:
+                    description: Time zone used for time restrictions.. Value must
+                      be one of `International Date Line West`, `Etc/GMT+12`, `American
+                      Samoa`, `Pacific/Pago_Pago`, `Midway Island`, `Pacific/Midway`,
+                      `Hawaii`, `Pacific/Honolulu`, `Alaska`, `America/Juneau`, `Pacific
+                      Time (US & Canada)`, `America/Los_Angeles`, `Tijuana`, `America/Tijuana`,
+                      `Arizona`, `America/Phoenix`, `Mazatlan`, `America/Mazatlan`,
+                      `Mountain Time (US & Canada)`, `America/Denver`, `Central America`,
+                      `America/Guatemala`, `Central Time (US & Canada)`, `America/Chicago`,
+                      `Chihuahua`, `America/Chihuahua`, `Guadalajara`, `America/Mexico_City`,
+                      `Mexico City`, `America/Mexico_City`, `Monterrey`, `America/Monterrey`,
+                      `Saskatchewan`, `America/Regina`, `Bogota`, `America/Bogota`,
+                      `Eastern Time (US & Canada)`, `America/New_York`, `Indiana (East)`,
+                      `America/Indiana/Indianapolis`, `Lima`, `America/Lima`, `Quito`,
+                      `America/Lima`, `Atlantic Time (Canada)`, `America/Halifax`,
+                      `Caracas`, `America/Caracas`, `Georgetown`, `America/Guyana`,
+                      `La Paz`, `America/La_Paz`, `Puerto Rico`, `America/Puerto_Rico`,
+                      `Santiago`, `America/Santiago`, `Newfoundland`, `America/St_Johns`,
+                      `Brasilia`, `America/Sao_Paulo`, `Buenos Aires`, `America/Argentina/Buenos_Aires`,
+                      `Montevideo`, `America/Montevideo`, `Greenland`, `America/Godthab`,
+                      `Mid-Atlantic`, `Atlantic/South_Georgia`, `Azores`, `Atlantic/Azores`,
+                      `Cape Verde Is.`, `Atlantic/Cape_Verde`, `Casablanca`, `Africa/Casablanca`,
+                      `Dublin`, `Europe/Dublin`, `Edinburgh`, `Europe/London`, `Lisbon`,
+                      `Europe/Lisbon`, `London`, `Europe/London`, `Monrovia`, `Africa/Monrovia`,
+                      `UTC`, `Etc/UTC`, `Amsterdam`, `Europe/Amsterdam`, `Belgrade`,
+                      `Europe/Belgrade`, `Berlin`, `Europe/Berlin`, `Bern`, `Europe/Zurich`,
+                      `Bratislava`, `Europe/Bratislava`, `Brussels`, `Europe/Brussels`,
+                      `Budapest`, `Europe/Budapest`, `Copenhagen`, `Europe/Copenhagen`,
+                      `Ljubljana`, `Europe/Ljubljana`, `Madrid`, `Europe/Madrid`,
+                      `Paris`, `Europe/Paris`, `Prague`, `Europe/Prague`, `Rome`,
+                      `Europe/Rome`, `Sarajevo`, `Europe/Sarajevo`, `Skopje`, `Europe/Skopje`,
+                      `Stockholm`, `Europe/Stockholm`, `Vienna`, `Europe/Vienna`,
+                      `Warsaw`, `Europe/Warsaw`, `West Central Africa`, `Africa/Algiers`,
+                      `Zagreb`, `Europe/Zagreb`, `Zurich`, `Europe/Zurich`, `Athens`,
+                      `Europe/Athens`, `Bucharest`, `Europe/Bucharest`, `Cairo`, `Africa/Cairo`,
+                      `Harare`, `Africa/Harare`, `Helsinki`, `Europe/Helsinki`, `Jerusalem`,
+                      `Asia/Jerusalem`, `Kaliningrad`, `Europe/Kaliningrad`, `Kyiv`,
+                      `Europe/Kiev`, `Pretoria`, `Africa/Johannesburg`, `Riga`, `Europe/Riga`,
+                      `Sofia`, `Europe/Sofia`, `Tallinn`, `Europe/Tallinn`, `Vilnius`,
+                      `Europe/Vilnius`, `Baghdad`, `Asia/Baghdad`, `Istanbul`, `Europe/Istanbul`,
+                      `Kuwait`, `Asia/Kuwait`, `Minsk`, `Europe/Minsk`, `Moscow`,
+                      `Europe/Moscow`, `Nairobi`, `Africa/Nairobi`, `Riyadh`, `Asia/Riyadh`,
+                      `St. Petersburg`, `Europe/Moscow`, `Volgograd`, `Europe/Volgograd`,
+                      `Tehran`, `Asia/Tehran`, `Abu Dhabi`, `Asia/Muscat`, `Baku`,
+                      `Asia/Baku`, `Muscat`, `Asia/Muscat`, `Samara`, `Europe/Samara`,
+                      `Tbilisi`, `Asia/Tbilisi`, `Yerevan`, `Asia/Yerevan`, `Kabul`,
+                      `Asia/Kabul`, `Almaty`, `Asia/Almaty`, `Astana`, `Asia/Almaty`,
+                      `Ekaterinburg`, `Asia/Yekaterinburg`, `Islamabad`, `Asia/Karachi`,
+                      `Karachi`, `Asia/Karachi`, `Tashkent`, `Asia/Tashkent`, `Chennai`,
+                      `Asia/Kolkata`, `Kolkata`, `Asia/Kolkata`, `Mumbai`, `Asia/Kolkata`,
+                      `New Delhi`, `Asia/Kolkata`, `Sri Jayawardenepura`, `Asia/Colombo`,
+                      `Kathmandu`, `Asia/Kathmandu`, `Dhaka`, `Asia/Dhaka`, `Urumqi`,
+                      `Asia/Urumqi`, `Rangoon`, `Asia/Rangoon`, `Bangkok`, `Asia/Bangkok`,
+                      `Hanoi`, `Asia/Bangkok`, `Jakarta`, `Asia/Jakarta`, `Krasnoyarsk`,
+                      `Asia/Krasnoyarsk`, `Novosibirsk`, `Asia/Novosibirsk`, `Beijing`,
+                      `Asia/Shanghai`, `Chongqing`, `Asia/Chongqing`, `Hong Kong`,
+                      `Asia/Hong_Kong`, `Irkutsk`, `Asia/Irkutsk`, `Kuala Lumpur`,
+                      `Asia/Kuala_Lumpur`, `Perth`, `Australia/Perth`, `Singapore`,
+                      `Asia/Singapore`, `Taipei`, `Asia/Taipei`, `Ulaanbaatar`, `Asia/Ulaanbaatar`,
+                      `Osaka`, `Asia/Tokyo`, `Sapporo`, `Asia/Tokyo`, `Seoul`, `Asia/Seoul`,
+                      `Tokyo`, `Asia/Tokyo`, `Yakutsk`, `Asia/Yakutsk`, `Adelaide`,
+                      `Australia/Adelaide`, `Darwin`, `Australia/Darwin`, `Brisbane`,
+                      `Australia/Brisbane`, `Canberra`, `Australia/Canberra`, `Guam`,
+                      `Pacific/Guam`, `Hobart`, `Australia/Hobart`, `Melbourne`, `Australia/Melbourne`,
+                      `Port Moresby`, `Pacific/Port_Moresby`, `Sydney`, `Australia/Sydney`,
+                      `Vladivostok`, `Asia/Vladivostok`, `Magadan`, `Asia/Magadan`,
+                      `New Caledonia`, `Pacific/Noumea`, `Solomon Is.`, `Pacific/Guadalcanal`,
+                      `Srednekolymsk`, `Asia/Srednekolymsk`, `Auckland`, `Pacific/Auckland`,
+                      `Fiji`, `Pacific/Fiji`, `Kamchatka`, `Asia/Kamchatka`, `Marshall
+                      Is.`, `Pacific/Majuro`, `Wellington`, `Pacific/Auckland`, `Chatham
+                      Is.`, `Pacific/Chatham`, `Nuku'alofa`, `Pacific/Tongatapu`,
+                      `Samoa`, `Pacific/Apia`, `Tokelau Is.`, `Pacific/Fakaofo`.
+                    type: string
+                  timeRestrictions:
+                    description: If time restrictions are set, alerts will follow
+                      this path when they arrive within the specified time ranges
+                      and meet the rules.
+                    items:
+                      properties:
+                        endDay:
+                          description: Value must be one of `monday`, `tuesday`, `wednesday`,
+                            `thursday`, `friday`, `saturday`, `sunday`.
+                          type: string
+                        endTime:
+                          description: Formatted as HH:MM
+                          type: string
+                        startDay:
+                          description: Value must be one of `monday`, `tuesday`, `wednesday`,
+                            `thursday`, `friday`, `saturday`, `sunday`.
+                          type: string
+                        startTime:
+                          description: Formatted as HH:MM
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+          status:
+            description: EscalationPathStatus defines the observed state of EscalationPath.
+            properties:
+              atProvider:
+                properties:
+                  afterDeferralBehavior:
+                    description: What happens after a deferral path finishes. Required
+                      for deferral paths.. Value must be one of `re_evaluate`, `execute_path`.
+                    type: string
+                  afterDeferralPathId:
+                    description: The escalation path to execute after this deferral
+                      path when after_deferral_behavior is execute_path.
+                    type: string
+                  default:
+                    description: Whether this escalation path is the default path.
+                      Value must be one of true or false
+                    type: boolean
+                  escalationPolicyId:
+                    description: The ID of the escalation policy
+                    type: string
+                  id:
+                    type: string
+                  initialDelay:
+                    description: Initial delay for escalation path in minutes. Maximum
+                      1 week (10080).
+                    type: number
+                  matchMode:
+                    description: How path rules are matched.. Value must be one of
+                      `match-all-rules`, `match-any-rule`.
+                    type: string
+                  name:
+                    description: The name of the escalation path
+                    type: string
+                  notificationType:
+                    description: Notification rule type
+                    type: string
+                  pathType:
+                    description: The type of escalation path. Cannot be changed after
+                      creation.. Value must be one of `escalation`, `deferral`.
+                    type: string
+                  position:
+                    description: The position of this path in the paths for this EP.
+                    type: number
+                  repeat:
+                    description: Whether this path should be repeated until someone
+                      acknowledges the alert. Value must be one of true or false
+                    type: boolean
+                  repeatCount:
+                    description: The number of times this path will be executed until
+                      someone acknowledges the alert
+                    type: number
+                  rules:
+                    description: Escalation path rules
+                    items:
+                      properties:
+                        fieldableId:
+                          description: The ID of the alert field. Only used with `field`
+                            rule type.
+                          type: string
+                        fieldableType:
+                          description: The type of the fieldable. Only used with `field`
+                            rule type. Value must be one of `AlertField`.
+                          type: string
+                        jsonPath:
+                          description: JSON path to extract value from payload
+                          type: string
+                        operator:
+                          description: 'How the value should be matched. For `json_path`
+                            rule type: `is`, `is_not`, `contains`, `does_not_contain`.
+                            For `field` rule type: `is`, `is_not`, `contains`, `does_not_contain`,
+                            `is_one_of`, `is_not_one_of`, `is_empty`, `is_not_empty`,
+                            `contains_key`, `does_not_contain_key`, `starts_with`,
+                            `does_not_start_with`, `matches`, `does_not_match`. For
+                            `source` rule type: `is`, `is_not`, `is_one_of`, `is_not_one_of`.
+                            For `related_incidents` rule type: `is_set`, `is_not_set`.'
+                          type: string
+                        ruleType:
+                          description: The type of the escalation path rule. Value
+                            must be one of `alert_urgency`, `working_hour`, `json_path`,
+                            `field`, `service`, `deferral_window`, `source`, `related_incidents`.
+                          type: string
+                        serviceIds:
+                          description: Service ids for which this escalation path
+                            should be used. Only used with `service` rule type.
+                          items:
+                            type: string
+                          type: array
+                        timeBlocks:
+                          description: Time windows during which alerts are deferred.
+                            Only used with `deferral_window` rule type.
+                          items:
+                            properties:
+                              allDay:
+                                description: Whether this time block covers the entire
+                                  day
+                                type: boolean
+                              endTime:
+                                description: Formatted as HH:MM
+                                type: string
+                              friday:
+                                description: Whether the time block applies on Friday
+                                type: boolean
+                              monday:
+                                description: Whether the time block applies on Monday
+                                type: boolean
+                              position:
+                                description: Position of the time block
+                                type: number
+                              saturday:
+                                description: Whether the time block applies on Saturday
+                                type: boolean
+                              startTime:
+                                description: Formatted as HH:MM
+                                type: string
+                              sunday:
+                                description: Whether the time block applies on Sunday
+                                type: boolean
+                              thursday:
+                                description: Whether the time block applies on Thursday
+                                type: boolean
+                              tuesday:
+                                description: Whether the time block applies on Tuesday
+                                type: boolean
+                              wednesday:
+                                description: Whether the time block applies on Wednesday
+                                type: boolean
+                            type: object
+                          type: array
+                        timeZone:
+                          description: Time zone for the deferral window (IANA format,
+                            e.g. `America/New_York`). Only used with `deferral_window`
+                            rule type.
+                          type: string
+                        urgencyIds:
+                          description: Alert urgency ids for which this escalation
+                            path should be used
+                          items:
+                            type: string
+                          type: array
+                        value:
+                          description: Value with which JSON path value should be
+                            matched
+                          type: string
+                        values:
+                          description: Values to match against. Used with `field`
+                            and `source` rule types.
+                          items:
+                            type: string
+                          type: array
+                        withinWorkingHour:
+                          description: Whether the escalation path should be used
+                            within working hours. Value must be one of true or false
+                          type: boolean
+                      type: object
+                    type: array
+                  timeRestrictionTimeZone:
+                    description: Time zone used for time restrictions.. Value must
+                      be one of `International Date Line West`, `Etc/GMT+12`, `American
+                      Samoa`, `Pacific/Pago_Pago`, `Midway Island`, `Pacific/Midway`,
+                      `Hawaii`, `Pacific/Honolulu`, `Alaska`, `America/Juneau`, `Pacific
+                      Time (US & Canada)`, `America/Los_Angeles`, `Tijuana`, `America/Tijuana`,
+                      `Arizona`, `America/Phoenix`, `Mazatlan`, `America/Mazatlan`,
+                      `Mountain Time (US & Canada)`, `America/Denver`, `Central America`,
+                      `America/Guatemala`, `Central Time (US & Canada)`, `America/Chicago`,
+                      `Chihuahua`, `America/Chihuahua`, `Guadalajara`, `America/Mexico_City`,
+                      `Mexico City`, `America/Mexico_City`, `Monterrey`, `America/Monterrey`,
+                      `Saskatchewan`, `America/Regina`, `Bogota`, `America/Bogota`,
+                      `Eastern Time (US & Canada)`, `America/New_York`, `Indiana (East)`,
+                      `America/Indiana/Indianapolis`, `Lima`, `America/Lima`, `Quito`,
+                      `America/Lima`, `Atlantic Time (Canada)`, `America/Halifax`,
+                      `Caracas`, `America/Caracas`, `Georgetown`, `America/Guyana`,
+                      `La Paz`, `America/La_Paz`, `Puerto Rico`, `America/Puerto_Rico`,
+                      `Santiago`, `America/Santiago`, `Newfoundland`, `America/St_Johns`,
+                      `Brasilia`, `America/Sao_Paulo`, `Buenos Aires`, `America/Argentina/Buenos_Aires`,
+                      `Montevideo`, `America/Montevideo`, `Greenland`, `America/Godthab`,
+                      `Mid-Atlantic`, `Atlantic/South_Georgia`, `Azores`, `Atlantic/Azores`,
+                      `Cape Verde Is.`, `Atlantic/Cape_Verde`, `Casablanca`, `Africa/Casablanca`,
+                      `Dublin`, `Europe/Dublin`, `Edinburgh`, `Europe/London`, `Lisbon`,
+                      `Europe/Lisbon`, `London`, `Europe/London`, `Monrovia`, `Africa/Monrovia`,
+                      `UTC`, `Etc/UTC`, `Amsterdam`, `Europe/Amsterdam`, `Belgrade`,
+                      `Europe/Belgrade`, `Berlin`, `Europe/Berlin`, `Bern`, `Europe/Zurich`,
+                      `Bratislava`, `Europe/Bratislava`, `Brussels`, `Europe/Brussels`,
+                      `Budapest`, `Europe/Budapest`, `Copenhagen`, `Europe/Copenhagen`,
+                      `Ljubljana`, `Europe/Ljubljana`, `Madrid`, `Europe/Madrid`,
+                      `Paris`, `Europe/Paris`, `Prague`, `Europe/Prague`, `Rome`,
+                      `Europe/Rome`, `Sarajevo`, `Europe/Sarajevo`, `Skopje`, `Europe/Skopje`,
+                      `Stockholm`, `Europe/Stockholm`, `Vienna`, `Europe/Vienna`,
+                      `Warsaw`, `Europe/Warsaw`, `West Central Africa`, `Africa/Algiers`,
+                      `Zagreb`, `Europe/Zagreb`, `Zurich`, `Europe/Zurich`, `Athens`,
+                      `Europe/Athens`, `Bucharest`, `Europe/Bucharest`, `Cairo`, `Africa/Cairo`,
+                      `Harare`, `Africa/Harare`, `Helsinki`, `Europe/Helsinki`, `Jerusalem`,
+                      `Asia/Jerusalem`, `Kaliningrad`, `Europe/Kaliningrad`, `Kyiv`,
+                      `Europe/Kiev`, `Pretoria`, `Africa/Johannesburg`, `Riga`, `Europe/Riga`,
+                      `Sofia`, `Europe/Sofia`, `Tallinn`, `Europe/Tallinn`, `Vilnius`,
+                      `Europe/Vilnius`, `Baghdad`, `Asia/Baghdad`, `Istanbul`, `Europe/Istanbul`,
+                      `Kuwait`, `Asia/Kuwait`, `Minsk`, `Europe/Minsk`, `Moscow`,
+                      `Europe/Moscow`, `Nairobi`, `Africa/Nairobi`, `Riyadh`, `Asia/Riyadh`,
+                      `St. Petersburg`, `Europe/Moscow`, `Volgograd`, `Europe/Volgograd`,
+                      `Tehran`, `Asia/Tehran`, `Abu Dhabi`, `Asia/Muscat`, `Baku`,
+                      `Asia/Baku`, `Muscat`, `Asia/Muscat`, `Samara`, `Europe/Samara`,
+                      `Tbilisi`, `Asia/Tbilisi`, `Yerevan`, `Asia/Yerevan`, `Kabul`,
+                      `Asia/Kabul`, `Almaty`, `Asia/Almaty`, `Astana`, `Asia/Almaty`,
+                      `Ekaterinburg`, `Asia/Yekaterinburg`, `Islamabad`, `Asia/Karachi`,
+                      `Karachi`, `Asia/Karachi`, `Tashkent`, `Asia/Tashkent`, `Chennai`,
+                      `Asia/Kolkata`, `Kolkata`, `Asia/Kolkata`, `Mumbai`, `Asia/Kolkata`,
+                      `New Delhi`, `Asia/Kolkata`, `Sri Jayawardenepura`, `Asia/Colombo`,
+                      `Kathmandu`, `Asia/Kathmandu`, `Dhaka`, `Asia/Dhaka`, `Urumqi`,
+                      `Asia/Urumqi`, `Rangoon`, `Asia/Rangoon`, `Bangkok`, `Asia/Bangkok`,
+                      `Hanoi`, `Asia/Bangkok`, `Jakarta`, `Asia/Jakarta`, `Krasnoyarsk`,
+                      `Asia/Krasnoyarsk`, `Novosibirsk`, `Asia/Novosibirsk`, `Beijing`,
+                      `Asia/Shanghai`, `Chongqing`, `Asia/Chongqing`, `Hong Kong`,
+                      `Asia/Hong_Kong`, `Irkutsk`, `Asia/Irkutsk`, `Kuala Lumpur`,
+                      `Asia/Kuala_Lumpur`, `Perth`, `Australia/Perth`, `Singapore`,
+                      `Asia/Singapore`, `Taipei`, `Asia/Taipei`, `Ulaanbaatar`, `Asia/Ulaanbaatar`,
+                      `Osaka`, `Asia/Tokyo`, `Sapporo`, `Asia/Tokyo`, `Seoul`, `Asia/Seoul`,
+                      `Tokyo`, `Asia/Tokyo`, `Yakutsk`, `Asia/Yakutsk`, `Adelaide`,
+                      `Australia/Adelaide`, `Darwin`, `Australia/Darwin`, `Brisbane`,
+                      `Australia/Brisbane`, `Canberra`, `Australia/Canberra`, `Guam`,
+                      `Pacific/Guam`, `Hobart`, `Australia/Hobart`, `Melbourne`, `Australia/Melbourne`,
+                      `Port Moresby`, `Pacific/Port_Moresby`, `Sydney`, `Australia/Sydney`,
+                      `Vladivostok`, `Asia/Vladivostok`, `Magadan`, `Asia/Magadan`,
+                      `New Caledonia`, `Pacific/Noumea`, `Solomon Is.`, `Pacific/Guadalcanal`,
+                      `Srednekolymsk`, `Asia/Srednekolymsk`, `Auckland`, `Pacific/Auckland`,
+                      `Fiji`, `Pacific/Fiji`, `Kamchatka`, `Asia/Kamchatka`, `Marshall
+                      Is.`, `Pacific/Majuro`, `Wellington`, `Pacific/Auckland`, `Chatham
+                      Is.`, `Pacific/Chatham`, `Nuku'alofa`, `Pacific/Tongatapu`,
+                      `Samoa`, `Pacific/Apia`, `Tokelau Is.`, `Pacific/Fakaofo`.
+                    type: string
+                  timeRestrictions:
+                    description: If time restrictions are set, alerts will follow
+                      this path when they arrive within the specified time ranges
+                      and meet the rules.
+                    items:
+                      properties:
+                        endDay:
+                          description: Value must be one of `monday`, `tuesday`, `wednesday`,
+                            `thursday`, `friday`, `saturday`, `sunday`.
+                          type: string
+                        endTime:
+                          description: Formatted as HH:MM
+                          type: string
+                        startDay:
+                          description: Value must be one of `monday`, `tuesday`, `wednesday`,
+                            `thursday`, `friday`, `saturday`, `sunday`.
+                          type: string
+                        startTime:
+                          description: Formatted as HH:MM
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              lastHandledReconcileAt:
+                description: |-
+                  LastHandledReconcileAt holds the value of the most recent
+                  reconcile-requested-at annotation token that the controller has
+                  processed. Users can compare this to the annotation to determine
+                  whether a reconcile request has been handled.
+                type: string
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

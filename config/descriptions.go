@@ -18,6 +18,7 @@ var KindDescriptions = map[string]string{
 	tfTeam:                                   "A Rootly team: a group of users that owns schedules, escalation policies and alert sources.",
 	tfEscalationPolicy:                       "An escalation policy: who is paged for an alert, in what order, and how many times.",
 	tfEscalationLevel:                        "One level of an escalation policy: who is notified at that step, and the delay before the next.",
+	tfEscalationPath:                         "A path through an escalation policy: the rules, such as alert urgency or working hours, that send an alert down it, and how often it repeats. Its levels are the EscalationLevel kinds that name it.",
 	tfSchedule:                               "An on-call schedule. Who is on call, and when, is set by the rotations that belong to it.",
 	tfScheduleRotation:                       "A rotation within a schedule: the shift pattern, the hours it is active, and its members.",
 	tfScheduleRotationUser:                   "One user's position in a schedule rotation. Deprecated upstream in favour of the rotation's inline members.",

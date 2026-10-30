@@ -15,7 +15,7 @@ import (
 // generated is every resource this provider generates, as the include list
 // the provider builds from its external-name table.
 var generated = []string{
-	tfTeam, tfEscalationPolicy, tfEscalationLevel,
+	tfTeam, tfEscalationPolicy, tfEscalationLevel, tfEscalationPath,
 	tfSchedule, tfScheduleRotation, tfScheduleRotationUser,
 	tfHeartbeat, tfAlertsSource, tfAlertRoute, tfAlertUrgency,
 	tfService, tfFunctionality, tfIncidentType, tfSeverity,
@@ -68,6 +68,7 @@ func TestConfigureNamesEveryKind(t *testing.T) {
 		{name: "Team", resource: tfTeam, shortGroup: groupTeam, kind: "Team"},
 		{name: "EscalationPolicy", resource: tfEscalationPolicy, shortGroup: groupEscalation, kind: "EscalationPolicy"},
 		{name: "EscalationLevel", resource: tfEscalationLevel, shortGroup: groupEscalation, kind: "EscalationLevel"},
+		{name: "EscalationPath", resource: tfEscalationPath, shortGroup: groupEscalation, kind: "EscalationPath"},
 		{name: "Schedule", resource: tfSchedule, shortGroup: groupSchedule, kind: "Schedule"},
 		{name: "ScheduleRotation", resource: tfScheduleRotation, shortGroup: groupSchedule, kind: "ScheduleRotation"},
 		{name: "ScheduleRotationUser", resource: tfScheduleRotationUser, shortGroup: groupSchedule, kind: "ScheduleRotationUser"},
@@ -125,6 +126,9 @@ func TestConfigureReferences(t *testing.T) {
 		target   string
 	}{
 		{resource: tfEscalationLevel, field: "escalation_policy_id", target: tfEscalationPolicy},
+		{resource: tfEscalationLevel, field: "escalation_policy_path_id", target: tfEscalationPath},
+		{resource: tfEscalationPath, field: "escalation_policy_id", target: tfEscalationPolicy},
+		{resource: tfEscalationPath, field: "after_deferral_path_id", target: tfEscalationPath},
 		{resource: tfScheduleRotation, field: "schedule_id", target: tfSchedule},
 		{resource: tfScheduleRotationUser, field: "schedule_rotation_id", target: tfScheduleRotation},
 		{resource: tfAlertRoute, field: "alerts_source_ids", target: tfAlertsSource},
@@ -203,6 +207,7 @@ func TestConfigureLateInitIgnoredFields(t *testing.T) {
 		ignored  []string
 	}{
 		{name: "EscalationPolicy", resource: tfEscalationPolicy, ignored: []string{"created_by_user_id", "last_updated_by_user_id"}},
+		{name: "EscalationPath", resource: tfEscalationPath, ignored: []string{"position"}},
 		{name: "Heartbeat", resource: tfHeartbeat, ignored: []string{"last_pinged_at", "expires_at", "status"}},
 		{name: "AlertsSource", resource: tfAlertsSource, ignored: []string{"alert_template_attributes", "alert_source_fields_attributes", "status"}},
 		{name: "AlertUrgency", resource: tfAlertUrgency, ignored: []string{"deleted_at"}},

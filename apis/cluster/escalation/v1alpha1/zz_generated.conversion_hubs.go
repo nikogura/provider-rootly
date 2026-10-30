@@ -10,4 +10,7 @@ package v1alpha1
 func (tr *EscalationLevel) Hub() {}
 
 // Hub marks this type as a conversion hub.
+func (tr *EscalationPath) Hub() {}
+
+// Hub marks this type as a conversion hub.
 func (tr *EscalationPolicy) Hub() {}

@@ -9,6 +9,7 @@ const (
 	tfTeam                                   = "rootly_team"
 	tfEscalationPolicy                       = "rootly_escalation_policy"
 	tfEscalationLevel                        = "rootly_escalation_level"
+	tfEscalationPath                         = "rootly_escalation_path"
 	tfSchedule                               = "rootly_schedule"
 	tfScheduleRotation                       = "rootly_schedule_rotation"
 	tfScheduleRotationUser                   = "rootly_schedule_rotation_user"
